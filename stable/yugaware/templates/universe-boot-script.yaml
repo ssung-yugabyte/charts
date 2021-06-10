@@ -1,5 +1,5 @@
 # Copyright (c) YugaByte, Inc.
-
+{{- if .Values.yugaware.universe_boot_script }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -12,4 +12,10 @@ metadata:
     heritage: {{ .Values.helm2Legacy | ternary "Tiller" (.Release.Service | quote) }}
 data:
   universe_boot_script: |
-{{ tpl (.Values.yugaware.universe_boot_script) . | indent 4 }}
+{{- if hasPrefix "#!" .Values.yugaware.universe_boot_script }}
+{{ tpl .Values.yugaware.universe_boot_script . | indent 4 }}
+{{- else }}
+{{ tpl (.Files.Get .Values.yugaware.universe_boot_script) . | indent 4 }}
+{{- end }}
+
+{{- end }}

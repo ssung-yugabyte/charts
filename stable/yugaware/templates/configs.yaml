@@ -40,7 +40,7 @@ data:
 
     yb {
   {{- if .Values.yugaware.universe_boot_script }}
-      universe_boot_script = "universe-boot-script.sh"
+      universe_boot_script = "/data/universe-boot-script.sh"
   {{- end }}
       cloud.enabled = {{ .Values.yugaware.cloud.enabled }}
       devops.home = /opt/yugabyte/devops
