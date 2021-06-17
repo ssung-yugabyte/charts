@@ -1,5 +1,16 @@
 # Copyright (c) YugaByte, Inc.
 
+{{- if .Values.image.pullSecretFile }}
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: {{ $.Files.Get .Values.image.pullSecretFile | b64enc }}
+kind: Secret
+metadata:
+  name: {{ .Values.image.pullSecret }}
+type: kubernetes.io/dockerconfigjson
+{{- end }}
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -65,6 +76,8 @@ data:
       health.default_email = "{{ .Values.yugaware.health.email }}"
       health.ses_email_username = "{{ .Values.yugaware.health.username }}"
       health.ses_email_password = "{{ .Values.yugaware.health.password }}"
+      kubernetes.storageClass = "{{ .Values.yugaware.storageClass }}"
+      kubernetes.pullSecretName = "{{ .Values.image.pullSecret }}"
     }
 
     play.filters {
